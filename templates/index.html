@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candy Classifier</title>
+</head>
+<body>
+    <h1>Candy Classifier</h1>
+    <form id="predict-form" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <button type="button" onclick="predict()">Predict</button>
+    </form>
+
+    <div id="prediction-result"></div>
+
+    <script>
+        function predict() {
+            // Get the uploaded image file
+            const fileInput = document.querySelector('input[type="file"]');
+            const file = fileInput.files[0];
+
+            // Make a POST request to the /predict endpoint
+            const formData = new FormData();
+            formData.append('image', file);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the prediction result on the page
+                const resultDiv = document.getElementById('prediction-result');
+                resultDiv.innerHTML = `Prediction: ${data.prediction}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
